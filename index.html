@@ -3597,7 +3597,7 @@ function hideLoading() {
 // ════════════════════════════════════════════════════════════════
 
 function getApiKey() {
-  return localStorage.getItem('barun_api_key') || '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';
+  return localStorage.getItem('barun_api_key');
 }
 
 function setApiKey(key) {
@@ -3628,13 +3628,8 @@ function saveApiKey() {
 }
 
 function requireApiKey() {
-  const key = getApiKey();
-  if (!key) {
-    showToast('Claude API 키가 필요합니다. 설정 후 다시 시도해주세요.', 'warn');
-    openApiKeyModal();
-    return null;
-  }
-  return key;
+  // 프록시 서버를 통해 API 호출하므로 클라이언트 키는 불필요
+  return 'proxy-mode';
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -4425,13 +4420,10 @@ async function parseSingleProposal(file) {
   }
   showLoading(`Claude AI 분석 중... (${file.name})`, '5~15초 소요 (Haiku)');
   const b64 = await toBase64(file);
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+  const resp = await fetch('https://yycedvtacocizpubrweq.supabase.co/functions/v1/claude-proxy', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
@@ -5054,13 +5046,10 @@ async function parseClaudeExisting(file, detectedCompany) {
   if (!apiKey) throw new Error('API 키가 필요합니다.');
 
   const b64 = await toBase64(file);
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+  const resp = await fetch('https://yycedvtacocizpubrweq.supabase.co/functions/v1/claude-proxy', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
@@ -5554,13 +5543,10 @@ ${prSummary}
 3. 주의할 점 (갱신형 담보, 보장 공백 등)
 4. 종합 추천 의견`;
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://yycedvtacocizpubrweq.supabase.co/functions/v1/claude-proxy', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
