@@ -5008,21 +5008,22 @@ function parseKB(pages, text) {
     summary: { total: 0, ok: 0, lack: 0, miss: 0 }
   };
 
-  const custM = text.match(/([가-힣]{2,4})\s*님의\s*전체\s*보장현황/);
-  const ageM2 = text.match(/\((\d+)세\s*,?\s*(남자|여자)\)/);
+  // KB 이름: "선준 님의 건강을 위한" (1페이지) 또는 "선준 님의 전체 보장현황" (3페이지)
+  const custM = text.match(/([가-힣]{2,4})\s*님의\s*(?:건강을|전체)/);
   if (custM) data.customerName = custM[1];
+  // KB 나이/성별: "(64세 ,남자)" 형식
+  const ageM2 = text.match(/\(\s*(\d+)세\s*,?\s*(남자|여자)\s*\)/);
   if (ageM2) { data.customerAge = ageM2[1] + '세'; data.gender = ageM2[2] === '남자' ? '남' : '여'; }
-  const custDone = true;
-  // (이름/나이/성별 위에서 처리됨)
 
-  // KB PDF: "6 427,532\n2 2 2 0" 형식 (계약수 월보험료\n충분 부족 미가입 추가필요)
-  const premM = text.match(/(\d+)\s+([\d,]+)\n\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/);
+  // KB 월보험료: 줄바꿈으로 분리된 형식 "6\n 0 2 2 2\n 427,532"
+  const premM = text.match(/([\d,]+)\s*\n\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}/);
   if (premM) {
-    data.totalPremium = parseInt(premM[2].replace(/,/g, ''));
-    data.summary.ok = parseInt(premM[3]);
-    data.summary.lack = parseInt(premM[4]);
-    data.summary.miss = parseInt(premM[5]);
-    data.summary.total = data.summary.ok + data.summary.lack + data.summary.miss;
+    data.totalPremium = parseInt(premM[1].replace(/,/g, ''));
+  }
+  if (!data.totalPremium) {
+    // 대안: 427,532 패턴 직접 찾기 (5~7자리 숫자,콤마 포함)
+    const altPrem = text.match(/\n\s*([\d,]{5,10})\s*\n\s*\d{4}-\d{2}-\d{2}/);
+    if (altPrem) data.totalPremium = parseInt(altPrem[1].replace(/,/g, ''));
   }
   if (!data.totalPremium && data.contracts.length > 0) {
     data.totalPremium = data.contracts.reduce((s, c) => s + (c.premium || 0), 0);
@@ -5031,13 +5032,19 @@ function parseKB(pages, text) {
   data.contracts = parseKBContracts(text);
   data.coverages = parseKBCoverages(pages, text);
 
-  // Summary calculation
+  // Summary: coverages의 status 기반으로 재계산
+  data.summary = { total: 0, ok: 0, lack: 0, miss: 0 };
   data.coverages.forEach(c => {
     data.summary.total++;
-    if (c.actual > 0 && c.status !== '미가입') data.summary.ok++;
+    if (c.status === '충분' || c.status === '가입') data.summary.ok++;
+    else if (c.status === '부족') data.summary.lack++;
     else if (c.status === '미가입') data.summary.miss++;
-    else data.summary.lack++;
   });
+
+  // 보험료 fallback: 계약에서 합산
+  if (!data.totalPremium && data.contracts.length > 0) {
+    data.totalPremium = data.contracts.reduce((s, c) => s + (c.premium || 0), 0);
+  }
 
   return data;
 }
