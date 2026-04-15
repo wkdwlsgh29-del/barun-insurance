@@ -5015,16 +5015,8 @@ function parseKB(pages, text) {
   const ageM2 = text.match(/\(\s*(\d+)세\s*,?\s*(남자|여자)\s*\)/);
   if (ageM2) { data.customerAge = ageM2[1] + '세'; data.gender = ageM2[2] === '남자' ? '남' : '여'; }
 
-  // KB 월보험료: 줄바꿈으로 분리된 형식 "6\n 0 2 2 2\n 427,532"
-  const premM = text.match(/([\d,]+)\s*\n\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}/);
-  if (premM) {
-    data.totalPremium = parseInt(premM[1].replace(/,/g, ''));
-  }
-  if (!data.totalPremium) {
-    // 대안: 427,532 패턴 직접 찾기 (5~7자리 숫자,콤마 포함)
-    const altPrem = text.match(/\n\s*([\d,]{5,10})\s*\n\s*\d{4}-\d{2}-\d{2}/);
-    if (altPrem) data.totalPremium = parseInt(altPrem[1].replace(/,/g, ''));
-  }
+  // KB 월보험료: 계약 합산으로 계산 (가장 정확)
+  // PDF의 요약 숫자보다 계약별 보험료 합산이 더 정확함
   if (!data.totalPremium && data.contracts.length > 0) {
     data.totalPremium = data.contracts.reduce((s, c) => s + (c.premium || 0), 0);
   }
