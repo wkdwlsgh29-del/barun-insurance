@@ -3597,7 +3597,7 @@ function hideLoading() {
 // ════════════════════════════════════════════════════════════════
 
 function getApiKey() {
-  return localStorage.getItem('barun_api_key');
+  return localStorage.getItem('barun_api_key') || 'proxy-mode';
 }
 
 function setApiKey(key) {
@@ -4412,12 +4412,7 @@ async function parseSingleProposal(file) {
     return localData;
   }
 
-  // ② 로컬 실패 → Claude API 폴백
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    hideLoading();
-    throw new Error('로컬 파싱 실패, API 키 미등록');
-  }
+  // ② 로컬 실패 → Claude API 프록시 폴백 (API 키는 서버에 저장됨)
   showLoading(`Claude AI 분석 중... (${file.name})`, '5~15초 소요 (Haiku)');
   const b64 = await toBase64(file);
   const resp = await fetch('https://yycedvtacocizpubrweq.supabase.co/functions/v1/claude-proxy', {
