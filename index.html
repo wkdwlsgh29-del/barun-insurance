@@ -4413,8 +4413,67 @@ async function parseSingleProposal(file) {
   }
 
   // ② 로컬 실패 → Claude API 프록시 폴백 (API 키는 서버에 저장됨)
-  showLoading(`Claude AI 분석 중... (${file.name})`, '5~15초 소요 (Haiku)');
-  const b64 = await toBase64(file);
+  showLoading(`Claude AI 분석 중... (${file.name})`, '5~15초 소요');
+
+  // 큰 PDF(3MB+)는 앞쪽 10페이지만 추출하여 전송 (토큰 한도 방지)
+  let b64;
+  if (file.size > 3 * 1024 * 1024) {
+    showLoading(`큰 PDF 감지 (${(file.size/1024/1024).toFixed(1)}MB) - 핵심 페이지 추출 중...`);
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+    const maxPages = Math.min(10, pdf.numPages);
+    let textForApi = '';
+    for (let i = 1; i <= maxPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      let pageText = '';
+      let lastY = null;
+      for (const item of content.items) {
+        const y = item.transform ? item.transform[5] : null;
+        if (lastY !== null && y !== null && Math.abs(y - lastY) > 3) pageText += '\n';
+        pageText += item.str + ' ';
+        lastY = y;
+      }
+      textForApi += `[페이지 ${i}]\n${pageText.trim()}\n\n`;
+    }
+    // 텍스트를 직접 전송 (PDF base64 대신)
+    showLoading(`Claude AI 분석 중... (${file.name}, ${maxPages}페이지 텍스트)`);
+    const resp = await fetch('https://yycedvtacocizpubrweq.supabase.co/functions/v1/claude-proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 8000,
+        messages: [{
+          role: 'user',
+          content: `보험 가입제안서/청약서에서 JSON만 반환해. 설명 없이 JSON만.
+{"company":"","productName":"","customerName":"","customerAge":0,"gender":"남|여","totalPremium":0,"maturity":"","paymentPeriod":"","coverages":[{"name":"","amount":"","premium":0,"renewType":"갱신형|비갱신형","category":"암|뇌|심장|상해|수술|입원|기타"}]}
+담보목록은 담보사항에서 전체 포함. 보험료 합산이 totalPremium과 일치해야 해.
+
+아래는 PDF에서 추출한 텍스트:
+${textForApi}`
+        }]
+      })
+    });
+    if (!resp.ok) {
+      const errText = await resp.text();
+      hideLoading();
+      throw new Error('API 오류: ' + errText.substring(0, 200));
+    }
+    const d = await resp.json();
+    let jsonStr = d.content[0].text.replace(/```json\n?|```\n?/g, '').trim();
+    if (!jsonStr.startsWith('{')) {
+      const jm = jsonStr.match(/\{[\s\S]*\}/);
+      if (jm) jsonStr = jm[0];
+    }
+    hideLoading();
+    const parsed = JSON.parse(jsonStr);
+    parsed._fileName = file.name;
+    parsed._parsedBy = 'claude-text-extract';
+    return parsed;
+  }
+
+  b64 = await toBase64(file);
   const resp = await fetch('https://yycedvtacocizpubrweq.supabase.co/functions/v1/claude-proxy', {
     method: 'POST',
     headers: {
