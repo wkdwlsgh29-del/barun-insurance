@@ -4878,82 +4878,119 @@ function parseKBContracts(text) {
 
 function parseKBCoverages(pages, text) {
   const coverages = [];
-  const kbGroups = {
-    '사망 장해': '사망',
-    '치매 간병': '치매',
-    '암 진단': '암',
-    '뇌/심장 진단': '뇌혈관질환',
-    '실손 의료비': '의료비',
-    '수술 입원': '수술비',
-    '운전자': '운전자',
-    '일상생활 배상': '일상생활'
-  };
-
-  let covText = '';
-  if (pages.length >= 2) {
-    covText = (pages[0].text || pages[0] || '') + ' ' + (pages[1].text || pages[1] || '');
-  } else if (pages.length >= 1) {
-    covText = pages[0].text || pages[0] || '';
-  }
-  covText = covText
-    .replace(/[가-힣]+\s*\(\s*\d+세\s*,?\s*(?:남자|여자)\s*\)\s*님의\s*전체\s*보장현황/g, '')
-    .replace(/\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}/g, '');
-
   const seenNames = new Set();
-  const amtOrDash = '(-?\\d+억\\s*[\\d,]*만?|[\\d,]+만|-|0)';
+  
+  // KB 보장현황 페이지 텍스트 추출 (p3~p4에 해당)
+  let covText = '';
+  const covStart = text.indexOf('님의 전체 보장현황');
+  if (covStart === -1) return coverages;
+  
+  // 전체 보장현황 섹션 끝: 계약리스트 시작 전까지
+  let covEnd = text.indexOf('님의 전체 계약리스트', covStart);
+  if (covEnd === -1) covEnd = text.indexOf('님의 상품별 가입현황', covStart);
+  if (covEnd === -1) covEnd = covStart + 5000;
+  covText = text.substring(covStart, covEnd);
 
-  Object.entries(kbGroups).forEach(([groupKey, groupName]) => {
-    const gIdx = covText.indexOf(groupKey);
-    if (gIdx === -1) return;
+  // 그룹 헤더 목록 (단독 줄로 나오는 것들 - 스킵 대상)
+  const groupHeaders = new Set(['사망', '장해', '치매', '간병', '암 진단', '뇌/심장', '진단', '실손', '의료비', '수술', '입원', '운전자', '기타']);
+  
+  // 카테고리 매핑
+  const categoryMap = {
+    '사망': '사망', '상해사망': '사망', '질병사망': '사망',
+    '장해': '상해', '후유장해': '상해',
+    '치매': '기타', '간병': '기타', '요양': '기타',
+    '암': '암', '유사암': '암', '고액암': '암', '항암': '암',
+    '뇌': '뇌', '뇌혈관': '뇌', '뇌졸중': '뇌', '뇌출혈': '뇌',
+    '심장': '심장', '허혈': '심장', '심근경색': '심장',
+    '실손': '기타', '의료비': '기타',
+    '수술': '수술', '입원': '입원',
+    '운전자': '운전자', '벌금': '운전자', '교통': '운전자', '변호사': '운전자',
+    '골절': '상해', '화재': '기타', '보철': '기타', '배상': '기타'
+  };
+  
+  function getCategory(name) {
+    for (const [key, cat] of Object.entries(categoryMap)) {
+      if (name.includes(key)) return cat;
+    }
+    return '기타';
+  }
 
-    let nextGIdx = covText.length;
-    Object.keys(kbGroups).forEach(key => {
-      const p = covText.indexOf(key, gIdx + groupKey.length);
-      if (p !== -1 && p < nextGIdx) nextGIdx = p;
-    });
+  // KB 금액 파싱: "2억 6,200만", "1,000만", "5,000만", "30만", "5억", "-", "0"
+  function parseKBAmount(str) {
+    if (!str || str === '-' || str === '0') return 0;
+    str = str.replace(/,/g, '').trim();
+    let total = 0;
+    const billions = str.match(/(\d+)억/);
+    if (billions) total += parseInt(billions[1]) * 10000;
+    const mans = str.match(/(\d+)만/);
+    if (mans) total += parseInt(mans[1]);
+    if (!billions && !mans) {
+      const num = parseInt(str);
+      if (!isNaN(num)) total = num;
+    }
+    return total; // 만원 단위
+  }
 
-    const sectionText = covText.substring(gIdx + groupKey.length, nextGIdx);
-    const rowRegex = new RegExp(
-      '([가-힣A-Za-z0-9%()（）/·\\s]{2,25}?)\\s+' + amtOrDash + '\\s+' + amtOrDash + '\\s+' + amtOrDash + '\\s+' + amtOrDash + '\\s+' + amtOrDash,
-      'g'
-    );
+  // 줄 단위 파싱
+  const lines = covText.split('\n');
+  let currentGroup = '';
+  
+  // KB 보장현황 각 줄: "담보명 합계금액 비갱신금액 갱신금액 부족금액 추가필요"
+  // 금액 패턴: 숫자+억/만 or 대시
+  const amtPat = '(\\d+억\\s*[\\d,]*만?|[\\d,]+만|5억|-|0)';
+  const lineRegex = new RegExp(
+    '^([가-힣A-Za-z0-9%()（）/·]+(?:\\s[가-힣A-Za-z0-9%()（）/·]+)*)\\s+' +
+    amtPat + '\\s+' + amtPat + '\\s+' + amtPat + '\\s+' + amtPat + '\\s+' + amtPat + '$'
+  );
 
-    let match;
-    while ((match = rowRegex.exec(sectionText)) !== null) {
-      let name = match[1].trim();
-      if (name.length < 2 || name.match(/^\d+$/) || seenNames.has(name)) continue;
-
+  for (const line of lines) {
+    const trimmed = line.trim();
+    
+    // 헤더/푸터 줄 스킵
+    if (!trimmed || trimmed.startsWith('선준') || trimmed.startsWith('※') || 
+        trimmed.startsWith('수도GA') || trimmed.includes('/27') ||
+        trimmed.match(/^\d+\s+[\d,]+$/) || trimmed.match(/^\(\d+세/)) continue;
+    
+    // 그룹 헤더 스킵
+    if (groupHeaders.has(trimmed)) {
+      currentGroup = trimmed;
+      continue;
+    }
+    
+    // 5열 데이터 줄 매칭
+    const match = trimmed.match(lineRegex);
+    if (match) {
+      const name = match[1].trim();
+      if (name.length < 2 || seenNames.has(name)) continue;
       seenNames.add(name);
-
-      const amount = parseAmount(match[2]);
+      
+      const total = parseKBAmount(match[2]);      // 합계
+      const nonRenewal = parseKBAmount(match[3]);  // 비갱신
+      const renewal = parseKBAmount(match[4]);     // 갱신
+      const shortage = parseKBAmount(match[5]);    // 부족
+      // match[6] = 추가가입필요
+      
+      let status = '충분';
+      if (total === 0) status = '미가입';
+      else if (shortage > 0) status = '부족';
+      
+      const amountStr = total > 0 ? (total >= 10000 ? (total/10000) + '억원' : total + '만원') : '0원';
+      const shortageStr = shortage > 0 ? (shortage >= 10000 ? (shortage/10000) + '억원' : shortage + '만원') : '0원';
+      
       coverages.push({
-        group: groupName,
-        name,
-        recommended: 0,
-        actual: amount,
-        shortage: 0,
-        status: amount === 0 ? '미가입' : '가입'
+        name: name,
+        amount: amountStr,
+        actual: amountStr,
+        recommended: '',
+        shortage: shortageStr,
+        status: status,
+        category: getCategory(name),
+        renewType: renewal > 0 ? '갱신형' : (nonRenewal > 0 ? '비갱신형' : ''),
+        company: '',
+        product: ''
       });
     }
-
-    // Fallback: simpler pattern for KB PDFs with different formatting
-    if (coverages.filter(c => c.group === groupName).length === 0) {
-      const simpleRegex = /([가-힣A-Za-z()（）/]{3,20})\s+([\d,]+만|[\d,]+억[\d,]*만?|-)\s+([\d,]+만|[\d,]+억[\d,]*만?|-)/g;
-      let sm;
-      while ((sm = simpleRegex.exec(sectionText)) !== null) {
-        const name = sm[1].trim();
-        if (name.length < 3 || seenNames.has(name)) continue;
-        seenNames.add(name);
-        const recommended = parseAmount(sm[2]);
-        const actual = parseAmount(sm[3]);
-        coverages.push({
-          group: groupName, name, recommended, actual,
-          shortage: Math.max(0, recommended - actual),
-          status: actual === 0 ? '미가입' : (actual < recommended ? '부족' : '충분')
-        });
-      }
-    }
-  });
+  }
 
   return coverages;
 }
@@ -4971,15 +5008,22 @@ function parseKB(pages, text) {
     summary: { total: 0, ok: 0, lack: 0, miss: 0 }
   };
 
-  const custM = text.match(/([가-힣]{2,4})\s*\(\s*(\d+)세\s*,?\s*(남자|여자)\s*\)/);
-  if (custM) {
-    data.customerName = custM[1];
-    data.customerAge = custM[2] + '세';
-    data.gender = custM[3] === '남자' ? '남' : '여';
-  }
+  const custM = text.match(/([가-힣]{2,4})\s*님의\s*전체\s*보장현황/);
+  const ageM2 = text.match(/\((\d+)세\s*,?\s*(남자|여자)\)/);
+  if (custM) data.customerName = custM[1];
+  if (ageM2) { data.customerAge = ageM2[1] + '세'; data.gender = ageM2[2] === '남자' ? '남' : '여'; }
+  const custDone = true;
+  // (이름/나이/성별 위에서 처리됨)
 
-  const premM = text.match(/님의\s*전체\s*보장현황\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+([\d,]+)/);
-  if (premM) data.totalPremium = parseInt(premM[1].replace(/,/g, ''));
+  // KB PDF: "6 427,532\n2 2 2 0" 형식 (계약수 월보험료\n충분 부족 미가입 추가필요)
+  const premM = text.match(/(\d+)\s+([\d,]+)\n\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/);
+  if (premM) {
+    data.totalPremium = parseInt(premM[2].replace(/,/g, ''));
+    data.summary.ok = parseInt(premM[3]);
+    data.summary.lack = parseInt(premM[4]);
+    data.summary.miss = parseInt(premM[5]);
+    data.summary.total = data.summary.ok + data.summary.lack + data.summary.miss;
+  }
   if (!data.totalPremium && data.contracts.length > 0) {
     data.totalPremium = data.contracts.reduce((s, c) => s + (c.premium || 0), 0);
   }
