@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>바른보험 | 전 보험사 AI 비교 무료 상담</title>
+<meta name="description" content="가입한 보험, 제대로 된 걸까요? 바른보험이 전 보험사 상품을 AI 분석 프로그램으로 비교해 드립니다. 상담은 무료이며 상담만 받아도 건강검진 할인·대학병원 진료 예약 지원 혜택을 안내해 드립니다.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="바른보험 | 전 보험사 AI 비교 무료 상담">
+<meta property="og:description" content="보험증권만 보내주시면 AI 분석으로 겹치는 보장과 빠진 보장을 찾아 드립니다. 상담 무료.">
+<meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#10283f">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --ink:#10283f;
+  --ink-2:#3d5166;
+  --ink-3:#6b7c8d;
+  --line:#e2e8ee;
+  --bg:#ffffff;
+  --bg-soft:#f4f7fa;
+  --bg-deep:#10283f;
+  --brand:#0b6e63;
+  --brand-soft:#e3f3f0;
+  --cta:#f26b21;
+  --cta-dark:#d95a14;
+  --ok:#0b8a6a;
+  --warn:#d98a00;
+  --bad:#d6453d;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(16,40,63,.08);
+  --wrap:1080px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  color:var(--ink);background:var(--bg);line-height:1.6;word-break:keep-all;
+  -webkit-font-smoothing:antialiased;padding-bottom:76px;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
+section{padding:72px 0}
+.eyebrow{display:inline-block;font-size:14px;font-weight:700;color:var(--brand);letter-spacing:.02em;margin-bottom:12px}
+h1{font-size:clamp(30px,6.4vw,50px);line-height:1.25;font-weight:800;letter-spacing:-.03em}
+h2{font-size:clamp(25px,4.6vw,36px);line-height:1.3;font-weight:800;letter-spacing:-.03em}
+h3{font-size:19px;line-height:1.4;font-weight:700;letter-spacing:-.02em}
+.lead{font-size:17px;color:var(--ink-2);margin-top:14px;max-width:620px}
+.center{text-align:center}
+.center .lead{margin-left:auto;margin-right:auto}
+
+/* 버튼 */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--cta);color:#fff;font-weight:700;font-size:17px;
+  padding:16px 28px;border-radius:14px;border:0;transition:background .15s,transform .15s;
+  box-shadow:0 8px 20px rgba(242,107,33,.28);
+}
+.btn:hover{background:var(--cta-dark);transform:translateY(-1px)}
+.btn:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #7fc8ff;outline-offset:3px}
+.btn-sm{font-size:15px;padding:10px 18px;border-radius:10px;box-shadow:none}
+.btn-block{width:100%}
+
+/* 헤더 */
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{display:flex;align-items:center;gap:9px;font-size:20px;font-weight:800;letter-spacing:-.03em}
+.logo-mark{width:30px;height:30px;border-radius:9px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:15px;font-weight:800}
+.nav-links{display:none;gap:28px;font-size:15px;font-weight:600;color:var(--ink-2)}
+.nav-links a:hover{color:var(--ink)}
+
+/* 히어로 */
+.hero{padding:48px 0 64px;background:linear-gradient(180deg,#f1f7f6 0%,#fff 100%)}
+.hero-grid{display:grid;gap:40px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero-points{list-style:none;margin:22px 0 28px;display:grid;gap:10px}
+.hero-points li{display:flex;gap:10px;align-items:flex-start;font-size:16px;font-weight:500;color:var(--ink-2)}
+.check{flex:none;width:22px;height:22px;border-radius:50%;background:var(--brand);margin-top:2px;position:relative}
+.check::after{content:"";position:absolute;left:7px;top:4px;width:6px;height:10px;border:solid #fff;border-width:0 2.2px 2.2px 0;transform:rotate(45deg)}
+.hero-note{font-size:13px;color:var(--ink-3);margin-top:12px}
+
+/* 분석 예시 카드 */
+.mock{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:22px;max-width:440px;margin:0 auto;width:100%}
+.mock-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.mock-title{font-weight:700;font-size:16px}
+.tag{font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;background:var(--bg-soft);color:var(--ink-3)}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.stat{border-radius:12px;padding:10px 6px;text-align:center}
+.stat b{display:block;font-size:22px;line-height:1.2}
+.stat span{font-size:12px;font-weight:600}
+.stat.ok{background:#e4f5ef;color:var(--ok)}
+.stat.warn{background:#fdf2dc;color:#a36700}
+.stat.bad{background:#fde8e6;color:var(--bad)}
+.gap-row{display:grid;grid-template-columns:86px 1fr 52px;align-items:center;gap:10px;font-size:14px;padding:7px 0}
+.gap-row .name{font-weight:600}
+.bar{height:8px;border-radius:99px;background:var(--bg-soft);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px}
+.pill{font-size:12px;font-weight:700;text-align:right}
+.c-ok{color:var(--ok)}.c-warn{color:#a36700}.c-bad{color:var(--bad)}
+.b-ok{background:var(--ok)}.b-warn{background:var(--warn)}.b-bad{background:var(--bad)}
+.mock-foot{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:12px;color:var(--ink-3)}
+
+/* 고민 */
+.soft{background:var(--bg-soft)}
+.worry{display:grid;gap:12px;margin-top:32px}
+.worry div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;font-size:16px;font-weight:600;display:flex;gap:12px;align-items:flex-start}
+.worry div::before{content:"“";font-size:30px;line-height:.9;color:var(--brand);font-weight:800}
+
+/* AI 비교 */
+.steps{display:grid;gap:16px;margin-top:36px;counter-reset:s}
+.step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;position:relative}
+.step::before{counter-increment:s;content:"STEP " counter(s);font-size:12px;font-weight:800;color:var(--brand);letter-spacing:.06em}
+.step h3{margin:6px 0 8px}
+.step p{font-size:15px;color:var(--ink-2)}
+.feat{display:grid;gap:14px;margin-top:20px}
+.feat-item{display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--line)}
+.feat-item:first-child{border-top:0}
+.ico{flex:none;width:44px;height:44px;border-radius:12px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center}
+.ico svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.feat-item p{font-size:15px;color:var(--ink-2);margin-top:3px}
+
+/* 혜택 */
+.deep{background:var(--bg-deep);color:#fff}
+.deep .eyebrow{color:#7fd9c9}
+.deep .lead{color:#b9c7d4}
+.benefits{display:grid;gap:16px;margin-top:36px}
+.benefit{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--radius);padding:28px 24px}
+.benefit .ico{background:rgba(127,217,201,.16);color:#7fd9c9;margin-bottom:16px}
+.benefit h3{font-size:21px}
+.benefit p{font-size:15px;color:#b9c7d4;margin-top:8px}
+.benefit small{display:inline-block;margin-top:14px;font-size:13px;font-weight:700;color:#7fd9c9}
+.fine{font-size:13px;color:#8fa1b3;margin-top:20px}
+
+/* 후기 */
+.reviews{display:grid;gap:16px;margin-top:36px}
+.review{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.review p{font-size:16px;color:var(--ink)}
+.review footer{margin-top:16px;font-size:14px;font-weight:600;color:var(--ink-3);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sample-badge{font-size:11px;font-weight:800;color:#fff;background:var(--bad);border-radius:6px;padding:2px 7px}
+
+/* 진행 */
+.flow{display:grid;gap:0;margin-top:32px;max-width:640px;margin-left:auto;margin-right:auto}
+.flow li{list-style:none;display:grid;grid-template-columns:40px 1fr;gap:16px;padding-bottom:26px;position:relative}
+.flow li::before{content:"";position:absolute;left:19px;top:40px;bottom:0;width:2px;background:var(--line)}
+.flow li:last-child::before{display:none}
+.flow li:last-child{padding-bottom:0}
+.num{width:40px;height:40px;border-radius:50%;background:var(--brand);color:#fff;font-weight:800;display:grid;place-items:center}
+.flow p{font-size:15px;color:var(--ink-2);margin-top:2px}
+
+/* FAQ */
+.faq{max-width:720px;margin:32px auto 0}
+details{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding:20px 36px 20px 0;font-size:17px;font-weight:700;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:4px;top:16px;font-size:24px;font-weight:400;color:var(--ink-3)}
+details[open] summary::after{content:"−"}
+details p{padding:0 0 20px;font-size:15px;color:var(--ink-2)}
+
+/* 폼 */
+.form-grid{display:grid;gap:36px;align-items:start}
+.form-card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:26px 22px}
+.field{margin-bottom:16px}
+label.lb,legend.lb{display:block;font-size:14px;font-weight:700;margin-bottom:7px}
+.req{color:var(--cta)}
+input[type=text],input[type=tel],select,textarea{
+  width:100%;font:inherit;font-size:16px;color:var(--ink);background:#fff;
+  border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;appearance:none;
+}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%236b7c8d' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--brand);box-shadow:0 0 0 3px rgba(11,110,99,.15)}
+textarea{resize:vertical;min-height:84px}
+fieldset{border:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{position:relative}
+.chips input{position:absolute;opacity:0;inset:0}
+.chips span{display:block;padding:9px 14px;border:1.5px solid var(--line);border-radius:999px;font-size:14px;font-weight:600;color:var(--ink-2);cursor:pointer}
+.chips input:checked+span{background:var(--brand);border-color:var(--brand);color:#fff}
+.chips input:focus-visible+span{outline:3px solid #7fc8ff;outline-offset:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.agree{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink-2);margin:6px 0 4px}
+.agree input{flex:none;width:20px;height:20px;margin-top:1px;accent-color:var(--brand)}
+.privacy{font-size:13px;color:var(--ink-3);margin:4px 0 18px 30px}
+.privacy summary{padding:4px 0;font-size:13px;font-weight:600;text-decoration:underline;color:var(--ink-3)}
+.privacy summary::after{display:none}
+.privacy details{border:0}
+.privacy table{width:100%;border-collapse:collapse;margin:8px 0}
+.privacy th,.privacy td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;font-weight:400}
+.privacy th{background:var(--bg-soft);font-weight:700;width:84px}
+.hp{position:absolute;left:-9999px}
+.form-msg{display:none;margin-top:14px;padding:14px;border-radius:12px;font-size:15px;font-weight:600}
+.form-msg.err{display:block;background:#fde8e6;color:var(--bad)}
+.done{display:none;text-align:center;padding:30px 6px}
+.done .num{margin:0 auto 16px;width:56px;height:56px;font-size:26px}
+.done p{color:var(--ink-2);margin-top:8px}
+.form-side ul{list-style:none;display:grid;gap:12px;margin-top:22px}
+.form-side li{display:flex;gap:10px;font-size:16px;font-weight:500;color:var(--ink-2)}
+
+/* 푸터 */
+footer.site{background:#0b1c2c;color:#8fa1b3;padding:40px 0 48px;font-size:13px;line-height:1.75}
+footer.site strong{color:#dfe7ee;font-size:15px}
+footer.site .info{margin:12px 0 18px}
+footer.site .legal p{margin-top:6px}
+
+/* 하단 고정 버튼 */
+.sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+
+@media(min-width:720px){
+  section{padding:96px 0}
+  .worry{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:repeat(3,1fr)}
+  .benefits{grid-template-columns:1fr 1fr}
+  .reviews{grid-template-columns:repeat(3,1fr)}
+  .form-card{padding:34px 32px}
+}
+@media(min-width:960px){
+  body{padding-bottom:0}
+  .sticky-cta{display:none}
+  .nav-links{display:flex}
+  .hero{padding:80px 0 96px}
+  .hero-grid{grid-template-columns:1.1fr .9fr}
+  .feat{grid-template-columns:1fr 1fr;column-gap:40px}
+  .feat-item:nth-child(2){border-top:0}
+  .form-grid{grid-template-columns:.85fr 1.15fr}
+  .form-side{position:sticky;top:96px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="logo"><span class="logo-mark">바</span>바른보험</a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="#ai">AI 비교 분석</a>
+      <a href="#benefit">상담 혜택</a>
+      <a href="#review" data-review-link hidden>상담 후기</a>
+      <a href="#faq">자주 묻는 질문</a>
+    </nav>
+    <a href="#consult" class="btn btn-sm">무료 상담 신청</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- 히어로 -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">전 보험사 AI 비교 · 무료 상담</span>
+      <h1>매달 내는 보험료,<br><em>제대로 보장받고</em> 계신가요?</h1>
+      <p class="lead">보험증권만 보내주세요. 바른보험이 AI 분석 프로그램으로 겹치는 보장과 빠진 보장을 찾아내고, 여러 보험사 상품을 한 표로 비교해 드립니다.</p>
+      <ul class="hero-points">
+        <li><span class="check"></span>한 회사 상품이 아닌, 여러 보험사 상품을 나란히 비교</li>
+        <li><span class="check"></span>상담·분석 비용 무료, 가입하지 않으셔도 괜찮습니다</li>
+        <li><span class="check"></span>상담만 받아도 건강검진 할인·대학병원 진료 예약 지원 안내</li>
+      </ul>
+      <a href="#consult" class="btn">내 보험 무료로 점검받기</a>
+      <p class="hero-note">신청하시면 담당 설계사가 직접 연락드립니다.</p>
+    </div>
+
+    <div class="mock" aria-label="보장 분석 결과 예시 화면">
+      <div class="mock-head">
+        <span class="mock-title">보장 분석 요약</span>
+        <span class="tag">예시 화면</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat ok"><b>5</b><span>충분</span></div>
+        <div class="stat warn"><b>3</b><span>부족</span></div>
+        <div class="stat bad"><b>2</b><span>미가입</span></div>
+      </div>
+      <div class="gap-row"><span class="name">암 진단비</span><span class="bar"><i class="b-ok" style="width:92%"></i></span><span class="pill c-ok">충분</span></div>
+      <div class="gap-row"><span class="name">뇌혈관 질환</span><span class="bar"><i class="b-warn" style="width:45%"></i></span><span class="pill c-warn">부족</span></div>
+      <div class="gap-row"><span class="name">심장 질환</span><span class="bar"><i class="b-warn" style="width:38%"></i></span><span class="pill c-warn">부족</span></div>
+      <div class="gap-row"><span class="name">수술비</span><span class="bar"><i class="b-bad" style="width:6%"></i></span><span class="pill c-bad">미가입</span></div>
+      <div class="gap-row"><span class="name">실손 의료비</span><span class="bar"><i class="b-ok" style="width:100%"></i></span><span class="pill c-ok">충분</span></div>
+      <p class="mock-foot">이해를 돕기 위한 예시이며, 실제 분석 결과는 고객님의 가입 내역에 따라 달라집니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 고민 -->
+<section class="soft">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">이런 고민, 있으신가요?</span>
+      <h2>보험은 여러 개인데<br>뭐가 보장되는지는 모르겠다면</h2>
+    </div>
+    <div class="worry">
+      <div>지인 부탁으로 가입해서 내용을 잘 몰라요</div>
+      <div>보험료가 부담되는데 뭘 줄여야 할지 모르겠어요</div>
+      <div>갱신할 때마다 보험료가 올라서 걱정돼요</div>
+      <div>정작 아플 때 보장이 안 될까 봐 불안해요</div>
+    </div>
+  </div>
+</section>
+
+<!-- AI 비교 -->
+<section id="ai">
+  <div class="wrap">
+    <span class="eyebrow">전 보험사 AI 비교 분석</span>
+    <h2>감이 아니라 데이터로<br>비교해 드립니다</h2>
+    <p class="lead">바른보험은 자체 AI 분석 프로그램으로 고객님의 기존 보험과 여러 보험사의 제안서를 같은 기준으로 놓고 비교합니다. 결과는 한눈에 보이는 비교표로 받아보실 수 있습니다.</p>
+
+    <div class="steps">
+      <div class="step">
+        <h3>보험증권 전달</h3>
+        <p>가지고 계신 증권이나 보장내역 PDF를 보내주시면 됩니다. 어느 보험사 상품이든 괜찮습니다.</p>
+      </div>
+      <div class="step">
+        <h3>AI 보장 분석</h3>
+        <p>담보별로 충분·부족·미가입을 구분하고, 겹치는 보장과 빠진 보장을 찾아냅니다.</p>
+      </div>
+      <div class="step">
+        <h3>비교표로 설명</h3>
+        <p>지금 보험과 여러 보험사 제안을 나란히 놓은 비교표로 담당 설계사가 쉽게 설명해 드립니다.</p>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="feat-item">
+        <span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg></span>
+        <div><h3>보장 갭 분석</h3><p>현재 보장과 권장 보장을 비교해 어디가 비어 있는지 보여드립니다.</p></div>
+      </div>
+      <div class="feat-item">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+        <div><h3>보험료 절감 시뮬레이션</h3><p>조정했을 때 월 보험료와 누적 납입액이 어떻게 달라지는지 계산해 드립니다.</p></div>
+      </div>
+      <div class="feat-item">
+        <span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+        <div><h3>갱신형 보험료 예측</h3><p>5년·10년·15년·20년 뒤 갱신 보험료가 어느 정도 될지 미리 살펴봅니다.</p></div>
+      </div>
+      <div class="feat-item">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></span>
+        <div><h3>한 장 요약 리포트</h3><p>복잡한 약관 대신 핵심만 정리한 한 장 요약본을 드립니다.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 혜택 -->
+<section id="benefit" class="deep">
+  <div class="wrap">
+    <span class="eyebrow">상담 고객 혜택</span>
+    <h2>상담만 받으셔도<br>드리는 헬스케어 혜택</h2>
+    <p class="lead">보험 가입 여부와 관계없이, 상담을 받으신 고객님께 안내해 드립니다.</p>
+    <div class="benefits">
+      <div class="benefit">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/><path d="M8 12h2l1.5-3 2 5 1.5-2h2"/></svg></span>
+        <h3>건강검진권 할인</h3>
+        <p>제휴 검진기관의 종합건강검진을 할인된 가격으로 이용하실 수 있도록 안내해 드립니다. 본인은 물론 가족 검진을 준비하실 때도 도움이 됩니다.</p>
+        <small>가입 여부와 무관 · 상담 고객 대상</small>
+      </div>
+      <div class="benefit">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-5h6v5M12 8v4M10 10h4"/></svg></span>
+        <h3>대학병원 우선 진료 예약 지원</h3>
+        <p>큰 병원 진료가 필요할 때 예약이 막막하셨다면, 대학병원 진료를 보다 빠르게 받으실 수 있도록 예약을 도와드립니다.</p>
+        <small>가입 여부와 무관 · 상담 고객 대상</small>
+      </div>
+    </div>
+    <p class="fine">※ 혜택의 세부 내용과 이용 가능한 기관·일정은 제휴처 및 병원 사정에 따라 달라질 수 있으며, 상담 시 자세히 안내해 드립니다.</p>
+  </div>
+</section>
+
+<!-- 후기: 아래 스크립트의 REVIEWS 배열에 실제 후기를 넣으면 자동으로 표시됩니다 -->
+<section id="review" class="soft" hidden>
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">상담 후기</span>
+      <h2>먼저 상담받은 분들의 이야기</h2>
+      <p class="lead">실제 상담 고객님의 후기를 동의를 받아 익명으로 소개합니다.</p>
+    </div>
+    <div class="reviews" id="reviewList"></div>
+  </div>
+</section>
+
+<!-- 진행 -->
+<section>
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">상담 진행 순서</span>
+      <h2>신청부터 결과 설명까지</h2>
+    </div>
+    <ol class="flow">
+      <li><span class="num">1</span><div><h3>상담 신청</h3><p>아래 신청서에 이름과 연락처만 남겨주세요. 1분이면 충분합니다.</p></div></li>
+      <li><span class="num">2</span><div><h3>담당 설계사 연락</h3><p>편하신 시간에 맞춰 연락드리고, 현재 가입 내역과 고민을 여쭤봅니다.</p></div></li>
+      <li><span class="num">3</span><div><h3>AI 분석 · 전 보험사 비교</h3><p>보내주신 증권을 분석하고 여러 보험사 상품과 비교표를 만듭니다.</p></div></li>
+      <li><span class="num">4</span><div><h3>결과 설명</h3><p>유지할 것과 조정할 것을 설명해 드립니다. 결정은 고객님이 하시면 됩니다.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="soft">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">자주 묻는 질문</span>
+      <h2>상담 전에 궁금하신 점</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>상담 비용이 정말 무료인가요?</summary>
+        <p>네, 상담과 보장 분석에는 비용이 들지 않습니다.</p>
+      </details>
+      <details>
+        <summary>상담받으면 꼭 가입해야 하나요?</summary>
+        <p>아닙니다. 분석 결과만 듣고 지금 보험을 그대로 유지하셔도 됩니다. 실제로 유지가 유리한 경우에는 유지를 권해 드립니다.</p>
+      </details>
+      <details>
+        <summary>무엇을 준비하면 되나요?</summary>
+        <p>가입하신 보험의 증권이나 보장내역이 있으면 가장 정확합니다. 없으셔도 조회 방법을 안내해 드리니 걱정하지 않으셔도 됩니다.</p>
+      </details>
+      <details>
+        <summary>기존 보험을 해지하라고 권하나요?</summary>
+        <p>무조건 해지를 권하지 않습니다. 기존 계약을 해지하고 새로 가입하면 보험 인수가 거절되거나 보험료가 오르거나 보장 내용이 달라질 수 있으므로, 유지했을 때와 바꿨을 때를 함께 비교해 설명해 드립니다.</p>
+      </details>
+      <details>
+        <summary>건강검진 할인과 대학병원 진료 예약 지원은 어떻게 받나요?</summary>
+        <p>상담을 받으신 고객님께 담당 설계사가 이용 방법을 안내해 드립니다. 보험 가입 여부와는 관계가 없습니다.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 상담 신청 -->
+<section id="consult">
+  <div class="wrap form-grid">
+    <div class="form-side">
+      <span class="eyebrow">무료 상담 신청</span>
+      <h2>1분이면 신청 끝.<br>내 보험부터 점검해 보세요</h2>
+      <ul>
+        <li><span class="check"></span>전 보험사 AI 비교 분석</li>
+        <li><span class="check"></span>건강검진권 할인 안내</li>
+        <li><span class="check"></span>대학병원 우선 진료 예약 지원 안내</li>
+        <li><span class="check"></span>가입 의무 없음</li>
+      </ul>
+    </div>
+
+    <div class="form-card">
+      <form name="consult" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="consultForm" novalidate>
+        <input type="hidden" name="form-name" value="consult">
+        <p class="hp"><label>이 칸은 비워 두세요 <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+
+        <div class="two">
+          <div class="field">
+            <label class="lb" for="f-name">이름 <span class="req">*</span></label>
+            <input type="text" id="f-name" name="이름" autocomplete="name" required maxlength="20" placeholder="홍길동">
+          </div>
+          <div class="field">
+            <label class="lb" for="f-age">연령대</label>
+            <select id="f-age" name="연령대">
+              <option value="">선택</option>
+              <option>20대</option><option>30대</option><option>40대</option><option>50대</option><option>60대 이상</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="lb" for="f-tel">연락처 <span class="req">*</span></label>
+          <input type="tel" id="f-tel" name="연락처" autocomplete="tel" inputmode="numeric" required maxlength="13" placeholder="010-0000-0000">
+        </div>
+
+        <fieldset class="field">
+          <legend class="lb">관심 있는 상담 (여러 개 선택 가능)</legend>
+          <div class="chips">
+            <label><input type="checkbox" name="관심분야[]" value="보험료 줄이기"><span>보험료 줄이기</span></label>
+            <label><input type="checkbox" name="관심분야[]" value="보장 점검"><span>보장 점검</span></label>
+            <label><input type="checkbox" name="관심분야[]" value="신규 가입"><span>신규 가입</span></label>
+            <label><input type="checkbox" name="관심분야[]" value="갱신형 보험료"><span>갱신형 보험료</span></label>
+            <label><input type="checkbox" name="관심분야[]" value="헬스케어 혜택"><span>헬스케어 혜택</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label class="lb" for="f-time">통화 편한 시간</label>
+          <select id="f-time" name="통화 희망 시간">
+            <option>언제든 괜찮아요</option>
+            <option>오전 (9시~12시)</option>
+            <option>오후 (12시~6시)</option>
+            <option>저녁 (6시 이후)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="lb" for="f-memo">남기실 말씀</label>
+          <textarea id="f-memo" name="문의 내용" maxlength="500" placeholder="궁금하신 점을 편하게 적어주세요. (선택)"></textarea>
+        </div>
+
+        <label class="agree"><input type="checkbox" id="f-agree" name="개인정보 동의" value="동의" required><span>개인정보 수집·이용에 동의합니다. <span class="req">(필수)</span></span></label>
+        <div class="privacy">
+          <details>
+            <summary>수집·이용 내용 보기</summary>
+            <table>
+              <tr><th>수집 항목</th><td>이름, 연락처, 연령대, 관심 분야, 통화 희망 시간, 문의 내용</td></tr>
+              <tr><th>이용 목적</th><td>보험 상담 및 보장 분석 안내를 위한 연락</td></tr>
+              <tr><th>보유 기간</th><td>상담 신청일로부터 1년 또는 동의 철회 시까지</td></tr>
+            </table>
+            동의를 거부하실 수 있으며, 거부 시 상담 신청이 제한됩니다.
+          </details>
+        </div>
+
+        <button type="submit" class="btn btn-block" id="submitBtn">무료 상담 신청하기</button>
+        <div class="form-msg" id="formMsg" role="alert"></div>
+      </form>
+
+      <div class="done" id="formDone" role="status" tabindex="-1">
+        <div class="num">✓</div>
+        <h3>상담 신청이 접수되었습니다</h3>
+        <p>담당 설계사가 확인 후 남겨주신 연락처로 연락드리겠습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <strong>바른보험</strong>
+    <!-- TODO: 공개 전에 아래 [ ] 항목을 실제 정보로 바꿔 주세요 -->
+    <p class="info">
+      소속: [소속 보험대리점명] · 담당 설계사: [성명] · 등록번호: [보험설계사 등록번호]<br>
+      주소: [사업장 주소] · 대표전화: [전화번호]<br>
+      [준법감시인 심의필 제0000-000호 (유효기간 0000.00.00~0000.00.00)]
+    </p>
+    <div class="legal">
+      <p>· 보험계약 체결 전에 상품설명서 및 약관을 반드시 읽어보시기 바랍니다.</p>
+      <p>· 보험계약자가 기존 보험계약을 해지하고 새로운 보험계약을 체결하는 경우 보험 인수가 거절되거나 보험료가 인상되거나 보장 내용이 달라질 수 있습니다.</p>
+      <p>· 이 페이지는 특정 보험상품을 권유하기 위한 것이 아니며, 상담 서비스 안내를 목적으로 합니다. AI 분석 결과는 참고 자료이며 실제 보장 내용은 각 보험사의 약관에 따릅니다.</p>
+      <p>· 건강검진권 할인 및 대학병원 진료 예약 지원은 보험 가입 여부와 무관하게 상담 고객에게 안내되는 제휴 서비스이며, 제휴처·병원 사정에 따라 내용이 변경될 수 있습니다.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky-cta"><a href="#consult" class="btn btn-block">무료 상담 신청하기</a></div>
+
+<script>
+/* ───────── 고객 후기 ─────────
+   실제 고객에게 받은 후기만, 동의를 받고 익명으로 넣어 주세요.
+   배열이 비어 있으면 후기 영역은 사이트에 표시되지 않습니다.
+   예) { text: "후기 내용", who: "김○○님", info: "40대 · 직장인" }                */
+const REVIEWS = [
+];
+
+/* 디자인 확인용 예시(주소 끝에 ?demo=1 을 붙였을 때만 보임, 실제 광고에는 노출되지 않음) */
+const DEMO_REVIEWS = [
+  { text: "여기에 실제 고객 후기가 들어갑니다. 상담받고 좋았던 점을 두세 문장으로 적어 주세요.", who: "김○○님", info: "40대 · 직장인" },
+  { text: "여기에 실제 고객 후기가 들어갑니다. 보험료나 보장이 어떻게 달라졌는지 구체적일수록 좋습니다.", who: "이○○님", info: "30대 · 자영업" },
+  { text: "여기에 실제 고객 후기가 들어갑니다. 혜택을 이용해 본 경험도 좋은 소재입니다.", who: "박○○님", info: "50대 · 주부" }
+];
+
+(function renderReviews(){
+  const demo = new URLSearchParams(location.search).has('demo');
+  const list = REVIEWS.length ? REVIEWS : (demo ? DEMO_REVIEWS : []);
+  if(!list.length) return;
+  const box = document.getElementById('reviewList');
+  list.forEach(r => {
+    const el = document.createElement('article');
+    el.className = 'review';
+    const p = document.createElement('p'); p.textContent = r.text;
+    const f = document.createElement('footer');
+    f.textContent = [r.who, r.info].filter(Boolean).join(' · ');
+    if(!REVIEWS.length){ const b = document.createElement('span'); b.className = 'sample-badge'; b.textContent = '예시'; f.prepend(b); }
+    el.append(p, f); box.append(el);
+  });
+  document.getElementById('review').hidden = false;
+  document.querySelector('[data-review-link]').hidden = false;
+})();
+
+/* ───────── 상담 신청 폼 (Netlify Forms) ───────── */
+(function(){
+  const form = document.getElementById('consultForm');
+  const msg = document.getElementById('formMsg');
+  const btn = document.getElementById('submitBtn');
+  const tel = document.getElementById('f-tel');
+
+  tel.addEventListener('input', () => {
+    const d = tel.value.replace(/\D/g,'').slice(0,11);
+    tel.value = d.length < 4 ? d : d.length < 8 ? d.slice(0,3)+'-'+d.slice(3) : d.slice(0,3)+'-'+d.slice(3,d.length-4)+'-'+d.slice(-4);
+  });
+
+  function fail(text, el){ msg.textContent = text; msg.className = 'form-msg err'; if(el) el.focus(); }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    msg.className = 'form-msg';
+    const name = document.getElementById('f-name');
+    if(!name.value.trim()) return fail('이름을 입력해 주세요.', name);
+    if(!/^01\d-\d{3,4}-\d{4}$/.test(tel.value)) return fail('연락처를 정확히 입력해 주세요. (예: 010-1234-5678)', tel);
+    const agree = document.getElementById('f-agree');
+    if(!agree.checked) return fail('개인정보 수집·이용에 동의해 주세요.', agree);
+
+    btn.disabled = true; btn.textContent = '접수 중…';
+    try{
+      const res = await fetch('/', {
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:new URLSearchParams(new FormData(form)).toString()
+      });
+      if(!res.ok) throw new Error(res.status);
+      form.style.display = 'none';
+      const done = document.getElementById('formDone');
+      done.style.display = 'block'; done.focus();
+      document.querySelector('.sticky-cta').style.display = 'none';
+    }catch(err){
+      fail('접수 중 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.');
+      btn.disabled = false; btn.textContent = '무료 상담 신청하기';
+    }
+  });
+})();
+</script>
+</body>
+</html>

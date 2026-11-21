@@ -1,0 +1,4 @@
+# 고객용 홍보 사이트(site/)만 공개합니다.
+# 루트의 index.html(설계사용 리모델링 시스템)은 Netlify에 배포되지 않습니다.
+[build]
+  publish = "site"
